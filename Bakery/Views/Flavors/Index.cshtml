@@ -2,26 +2,26 @@
   Layout = "_Layout";
 }
 
-@using ToDoList.Models;
+@using Bakery.Models;
 @using System.Security.Claims
-@model IEnumerable<ToDoList.Models.Item>
+@model IEnumerable<Bakery.Models.Flavor>
 
-<h1>Items for @User.Identity.Name</h1>
+<h1>Flavors for @User.Identity.Name</h1>
 
 @if (Model.Any())
 {
   <ul>
-    @foreach (Item item in Model)
+    @foreach (Flavor flavor in Model)
     {
-      <li>@Html.ActionLink($"{item.Description}", "Details", new { id = item.ItemId })</li>
+      <li>@Html.ActionLink($"{flavor.Description}", "Details", new { id = flavor.FlavorId })</li>
     }
   </ul>
 } 
 else
 {
-  <h3>No items have been added yet!</h3>
+  <h3>No flavors have been added yet!</h3>
 }
 
-<p>@Html.ActionLink("Add new item", "Create")</p>
+<p>@Html.ActionLink("Add new flavor", "Create")</p>
 
 <p>@Html.ActionLink("Home", "Index", "Home")</p>

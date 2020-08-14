@@ -2,27 +2,27 @@
   Layout = "_Layout";
 }
 
-@model ToDoList.Models.Category;
+@model Bakery.Models.Treat;
 
-<h2>Category Details</h2>
-<hr />
+<h2>Treat Details</h2>
+<hr/>
 <h3>@Html.DisplayNameFor(model => model.Name): @Html.DisplayFor(model => model.Name)</h3>
 
-@if(@Model.Items.Count == 0)
+@if(@Model.Flavors.Count == 0)
 {
-  <p>This category does not contain any items</p>
+  <p>This treat does not contain any flavors</p>
 }
 else
 {
-  <h4>Items the category contains:</h4>
+  <h4>Flavors the treat contains:</h4>
   <ul>
-  @foreach(var join in Model.Items)
+  @foreach(var join in Model.Flavors)
   {
-    <li>@join.Item.Description</li>
+    <li>@join.Flavor.Description</li>
   }
   </ul>
 }
 
-<p>@Html.ActionLink("Back to categories", "Index")</p>
-<p>@Html.ActionLink("Edit Category", "Edit", new { id = Model.CategoryId })</p>
-<p>@Html.ActionLink("Delete Category", "Delete", new { id = Model.CategoryId })</p>
+<p>@Html.ActionLink("Back to treats", "Index")</p>
+<p>@Html.ActionLink("Edit Treat", "Edit", new { id = Model.TreatId })</p>
+<p>@Html.ActionLink("Delete Treat", "Delete", new { id = Model.TreatId })</p>
