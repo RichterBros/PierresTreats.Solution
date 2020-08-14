@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Models;
+using Bakery.Models;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -11,16 +11,16 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System.Security.Claims;
 
-namespace ToDoList.Controllers
+namespace Bakery.Controllers
 {
   [Authorize] //new line
-  public class ItemsController : Controller
+  public class FlavorsController : Controller
   {
-    private readonly ToDoListContext _db;
+    private readonly BakeryContext _db;
     private readonly UserManager<ApplicationUser> _userManager; //new line
 
     //updated constructor
-    public ItemsController(UserManager<ApplicationUser> userManager, ToDoListContext db)
+    public FlavorsController(UserManager<ApplicationUser> userManager, BakeryContext db)
     {
       _userManager = userManager;
       _db = db;
@@ -31,27 +31,27 @@ namespace ToDoList.Controllers
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
-      var userItems = _db.Items.Where(entry => entry.User.Id == currentUser.Id);
-      return View(userItems);
+      var userFlavors = _db.Flavors.Where(entry => entry.User.Id == currentUser.Id);
+      return View(userFlavors);
     }
 
     public ActionResult Create()
     {
-      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
       return View();
     }
 
     //updated Create post method
     [HttpPost]
-    public async Task<ActionResult> Create(Item item, int CategoryId)
+    public async Task<ActionResult> Create(Flavor flavor, int TreatId)
     {
       var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
       var currentUser = await _userManager.FindByIdAsync(userId);
-      item.User = currentUser;
-      _db.Items.Add(item);
-      if (CategoryId != 0)
+      flavor.User = currentUser;
+      _db.Flavors.Add(flavor);
+      if (TreatId != 0)
       {
-        _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+        _db.TreatFlavor.Add(new TreatFlavor() { TreatId = TreatId, FlavorId = flavor.FlavorId });
       }
       _db.SaveChanges();
       return RedirectToAction("Index");
@@ -59,45 +59,45 @@ namespace ToDoList.Controllers
 
     public ActionResult Details(int id)
     {
-      var thisItem = _db.Items
-          .Include(item => item.Categories)
-          .ThenInclude(join => join.Category)
-          .FirstOrDefault(item => item.ItemId == id);
-      return View(thisItem);
+      var thisFlavor = _db.Flavors
+          .Include(flavor => flavor.Treats)
+          .ThenInclude(join => join.Treat)
+          .FirstOrDefault(flavor => flavor.FlavorId == id);
+      return View(thisFlavor);
     }
 
     public ActionResult Edit(int id)
     {
-      var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
-      return View(thisItem);
+      var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
+      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
+      return View(thisFlavor);
     }
 
     [HttpPost]
-    public ActionResult Edit(Item item, int CategoryId)
+    public ActionResult Edit(Flavor flavor, int TreatId)
     {
-      if (CategoryId != 0)
+      if (TreatId != 0)
       {
-        _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+        _db.TreatFlavor.Add(new TreatFlavor() { TreatId = TreatId, FlavorId = flavor.FlavorId });
       }
-      _db.Entry(item).State = EntityState.Modified;
+      _db.Entry(flavor).State = EntityState.Modified;
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
 
-    public ActionResult AddCategory(int id)
+    public ActionResult AddTreat(int id)
     {
-      var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
-      return View(thisItem);
+      var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
+      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Name");
+      return View(thisFlavor);
     }
 
     [HttpPost]
-    public ActionResult AddCategory(Item item, int CategoryId)
+    public ActionResult AddTreat(Flavor flavor, int TreatId)
     {
-      if (CategoryId != 0)
+      if (TreatId != 0)
       {
-        _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+        _db.TreatFlavor.Add(new TreatFlavor() { TreatId = TreatId, FlavorId = flavor.FlavorId });
       }
       _db.SaveChanges();
       return RedirectToAction("Index");
@@ -105,24 +105,24 @@ namespace ToDoList.Controllers
 
     public ActionResult Delete(int id)
     {
-      var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-      return View(thisItem);
+      var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
+      return View(thisFlavor);
     }
 
     [HttpPost, ActionName("Delete")]
     public ActionResult DeleteConfirmed(int id)
     {
-      var thisItem = _db.Items.FirstOrDefault(items => items.ItemId == id);
-      _db.Items.Remove(thisItem);
+      var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
+      _db.Flavors.Remove(thisFlavor);
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
 
     [HttpPost]
-    public ActionResult DeleteCategory(int joinId)
+    public ActionResult DeleteTreat(int joinId)
     {
-      var joinEntry = _db.CategoryItem.FirstOrDefault(entry => entry.CategoryItemId == joinId);
-      _db.CategoryItem.Remove(joinEntry);
+      var joinEntry = _db.TreatFlavor.FirstOrDefault(entry => entry.TreatFlavorId == joinId);
+      _db.TreatFlavor.Remove(joinEntry);
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
