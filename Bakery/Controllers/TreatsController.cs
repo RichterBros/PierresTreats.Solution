@@ -4,32 +4,58 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
+//new using directives
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using System.Security.Claims;
+
 namespace Bakery.Controllers
 {
+  [Authorize] //new line
   public class TreatsController : Controller
   {
     private readonly BakeryContext _db;
-
-    public TreatsController(BakeryContext db)
+private readonly UserManager<ApplicationUser> _userManager; //new line
+  
+  //updated constructor
+  public TreatsController(UserManager<ApplicationUser> userManager, BakeryContext db)
     {
+      _userManager = userManager;
       _db = db;
     }
 
-    public ActionResult Index()
+    // public ActionResult Index()
+    // {
+    //   List<Treat> model = _db.Treats.ToList();
+    //   return View(model);
+    // }
+    public async Task<ActionResult> Index()
     {
-      List<Treat> model = _db.Treats.ToList();
-      return View(model);
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      var userTreats = _db.Treats.Where(entry => entry.User.Id == currentUser.Id);
+      return View(userTreats);
     }
-
+    
+    
     public ActionResult Create()
     {
       return View();
     }
 
+        //updated Create post method
     [HttpPost]
-    public ActionResult Create(Treat treat)
+    public async Task<ActionResult> Create(Treat treat, int FlavorId)
     {
+      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      var currentUser = await _userManager.FindByIdAsync(userId);
+      treat.User = currentUser;
       _db.Treats.Add(treat);
+      if (FlavorId != 0)
+      {
+        _db.TreatFlavor.Add(new TreatFlavor() { FlavorId = FlavorId, TreatId = treat.TreatId });
+      }
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
