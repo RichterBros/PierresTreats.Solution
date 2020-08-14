@@ -12,7 +12,7 @@ using System.Security.Claims;
 
 namespace Bakery.Controllers
 {
-  [Authorize] //new line
+  //[Authorize] //new line
   public class TreatsController : Controller
   {
     private readonly BakeryContext _db;
@@ -25,19 +25,19 @@ private readonly UserManager<ApplicationUser> _userManager; //new line
       _db = db;
     }
 
-    // public ActionResult Index()
+  
+    // public async Task<ActionResult> Index()
     // {
-    //   List<Treat> model = _db.Treats.ToList();
-    //   return View(model);
+    //   var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    //   var currentUser = await _userManager.FindByIdAsync(userId);
+    //   var userTreats = _db.Treats.Where(entry => entry.User.Id == currentUser.Id);
+    //   return View(userTreats);
     // }
-    public async Task<ActionResult> Index()
+     public ActionResult Index()
     {
-      var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-      var currentUser = await _userManager.FindByIdAsync(userId);
-      var userTreats = _db.Treats.Where(entry => entry.User.Id == currentUser.Id);
-      return View(userTreats);
+      List<Treat> model = _db.Treats.ToList();
+      return View(model);
     }
-    
     
     public ActionResult Create()
     {
@@ -45,6 +45,8 @@ private readonly UserManager<ApplicationUser> _userManager; //new line
     }
 
         //updated Create post method
+    
+    [Authorize] //new line
     [HttpPost]
     public async Task<ActionResult> Create(Treat treat, int FlavorId)
     {
@@ -60,6 +62,7 @@ private readonly UserManager<ApplicationUser> _userManager; //new line
       return RedirectToAction("Index");
     }
 
+   
     public ActionResult Details(int id)
     {
       var thisTreat = _db.Treats
@@ -69,12 +72,13 @@ private readonly UserManager<ApplicationUser> _userManager; //new line
       return View(thisTreat);
     }
 
+[Authorize] //new line
     public ActionResult Edit(int id)
     {
       var thisTreat = _db.Treats.FirstOrDefault(treat => treat.TreatId == id);
       return View(thisTreat);
     }
-
+[Authorize] //new line
     [HttpPost]
     public ActionResult Edit(Treat treat)
     {
@@ -82,13 +86,13 @@ private readonly UserManager<ApplicationUser> _userManager; //new line
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
-
+[Authorize] //new line
     public ActionResult Delete(int id)
     {
       var thisTreat = _db.Treats.FirstOrDefault(treat => treat.TreatId == id);
       return View(thisTreat);
     }
-
+[Authorize] //new line
     [HttpPost, ActionName("Delete")]
     public ActionResult DeleteConfirmed(int id)
     {
