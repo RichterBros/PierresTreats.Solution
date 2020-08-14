@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace ToDoList.Models
+namespace Bakery.Models
 {
-  public class ToDoListContext : IdentityDbContext<ApplicationUser>
+  public class BakeryContext : IdentityDbContext<ApplicationUser>
   {
-    public virtual DbSet<Category> Categories { get; set; }
-    public DbSet<Item> Items { get; set; }
-    public DbSet<CategoryItem> CategoryItem { get; set; }
+    public virtual DbSet<Treat> Treats { get; set; }
+    public DbSet<Flavor> Flavors { get; set; }
+    public DbSet<TreatFlavor> TreatFlavor { get; set; }
 
-    public ToDoListContext(DbContextOptions options) : base(options) { }
+    public BakeryContext(DbContextOptions options) : base(options) { }
   }
 }

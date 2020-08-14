@@ -1,18 +1,18 @@
 using System.Collections.Generic;
 
-namespace ToDoList.Models
+namespace Bakery.Models
 {
-    public class Item
+    public class Flavor
     {
-        public Item()
+        public Flavor()
         {
-            this.Categories = new HashSet<CategoryItem>();
+            this.Treats = new HashSet<TreatFlavor>();
         }
 
-        public int ItemId { get; set; }
+        public int FlavorId { get; set; }
         public string Description { get; set; }
         public virtual ApplicationUser User { get; set; }
 
-        public ICollection<CategoryItem> Categories { get;}
+        public ICollection<TreatFlavor> Treats { get;}
     }
 }

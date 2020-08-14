@@ -1,11 +1,11 @@
-namespace ToDoList.Models
+namespace Bakery.Models
 {
-  public class CategoryItem
+  public class TreatFlavor
     {       
-        public int CategoryItemId { get; set; }
-        public int ItemId { get; set; }
-        public int CategoryId { get; set; }
-        public Item Item { get; set; }
-        public Category Category { get; set; }
+        public int TreatFlavorId { get; set; }
+        public int FlavorId { get; set; }
+        public int TreatId { get; set; }
+        public Flavor Flavor { get; set; }
+        public Treat Treat { get; set; }
     }
 }
