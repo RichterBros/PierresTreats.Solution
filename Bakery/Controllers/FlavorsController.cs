@@ -100,7 +100,8 @@ namespace Bakery.Controllers
     public ActionResult AddTreat(int id)
     {
       var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
-      ViewBag.FlavorId = new SelectList(_db.Treats, "TreatId", "Name");
+      ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Description");
+      // _db.SaveChanges();
       return View(thisFlavor);
     }
 

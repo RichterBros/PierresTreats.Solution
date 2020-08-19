@@ -99,9 +99,10 @@ private readonly UserManager<ApplicationUser> _userManager; //new line
 
 [Authorize] //new line
     public ActionResult AddFlavor(int id)
-    {
+   {
       var thisTreat = _db.Treats.FirstOrDefault(treats => treats.TreatId == id);
-      ViewBag.TreatId = new SelectList(_db.Flavors, "FlavorId", "Description");
+      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "Description");
+      //  _db.SaveChanges();
       return View(thisTreat);
     }
 
@@ -109,10 +110,11 @@ private readonly UserManager<ApplicationUser> _userManager; //new line
     [HttpPost]
     public ActionResult AddFlavor(Treat treat, int FlavorId)
     {
-      if (FlavorId != 0)
+       if (FlavorId != 0)
       {
         _db.TreatFlavor.Add(new TreatFlavor() { FlavorId = FlavorId, TreatId = treat.TreatId });
       }
+      // _db.Entry(treat).State = EntityState.Modified;
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
