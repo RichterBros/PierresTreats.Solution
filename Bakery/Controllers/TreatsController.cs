@@ -42,7 +42,7 @@ private readonly UserManager<ApplicationUser> _userManager; //new line
     
     public ActionResult Create()
     {
-      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "Name");
+      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "Description");
       return View();
     }
 
@@ -78,7 +78,7 @@ private readonly UserManager<ApplicationUser> _userManager; //new line
     public ActionResult Edit(int id)
     {
       var thisTreat = _db.Treats.FirstOrDefault(treats => treats.TreatId == id);
-      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "Name");
+      ViewBag.FlavorId = new SelectList(_db.Flavors, "FlavorId", "Description");
       return View(thisTreat);
     }
 
@@ -101,7 +101,7 @@ private readonly UserManager<ApplicationUser> _userManager; //new line
     public ActionResult AddFlavor(int id)
     {
       var thisTreat = _db.Treats.FirstOrDefault(treats => treats.TreatId == id);
-      ViewBag.TreatId = new SelectList(_db.Flavors, "FlavorId", "Name");
+      ViewBag.TreatId = new SelectList(_db.Flavors, "FlavorId", "Description");
       return View(thisTreat);
     }
 
@@ -136,6 +136,7 @@ private readonly UserManager<ApplicationUser> _userManager; //new line
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
+    
     
     [Authorize] //new line
     [HttpPost]

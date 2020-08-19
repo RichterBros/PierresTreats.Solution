@@ -9,6 +9,8 @@ namespace Bakery.Models
             this.Flavors = new HashSet<TreatFlavor>();
         }
 
+        
+        public int FlavorId { get; set; }
         public int TreatId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
