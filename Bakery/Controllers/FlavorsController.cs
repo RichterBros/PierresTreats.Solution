@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
-//new using directives
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
@@ -13,29 +11,18 @@ using System.Security.Claims;
 
 namespace Bakery.Controllers
 {
-  //[Authorize] //new line
+ 
   public class FlavorsController : Controller
   {
     private readonly BakeryContext _db;
     private readonly UserManager<ApplicationUser> _userManager; //new line
-
-    //updated constructor
     public FlavorsController(UserManager<ApplicationUser> userManager, BakeryContext db)
     {
       _userManager = userManager;
       _db = db;
     }
 
-    // //updated Index method
-    // public async Task<ActionResult> Index()
-    // {
-    //   var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-    //   var currentUser = await _userManager.FindByIdAsync(userId);
-    //   var userFlavors = _db.Flavors.Where(entry => entry.User.Id == currentUser.Id);
-    //   return View(userFlavors);
-    // }
-
- public ActionResult Index()
+    public ActionResult Index()
     {
       List<Flavor> model = _db.Flavors.ToList();
       return View(model);
@@ -46,8 +33,7 @@ namespace Bakery.Controllers
       return View();
     }
 
-    //updated Create post method
-    [Authorize] //new line
+    [Authorize] 
     [HttpPost]
     public async Task<ActionResult> Create(Flavor flavor, int TreatId)
     {
@@ -62,7 +48,6 @@ namespace Bakery.Controllers
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
-
     public ActionResult Details(int id)
     {
       var thisFlavor = _db.Flavors
@@ -72,7 +57,7 @@ namespace Bakery.Controllers
       return View(thisFlavor);
     }
 
-   [Authorize] //new line
+   [Authorize] 
     public ActionResult Edit(int id)
     {
       var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
@@ -80,8 +65,7 @@ namespace Bakery.Controllers
       return View(thisFlavor);
     }
 
-
-[Authorize] //new line
+    [Authorize] 
     [HttpPost]
     public ActionResult Edit(Flavor flavor, int TreatId)
     {
@@ -94,22 +78,16 @@ namespace Bakery.Controllers
       return RedirectToAction("Index");
     }
 
-
-
-[Authorize] //new line
+    [Authorize] 
     public ActionResult AddTreat(int id)
     {
       var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
       ViewBag.TreatId = new SelectList(_db.Treats, "TreatId", "Description");
-      // _db.SaveChanges();
+      
       return View(thisFlavor);
     }
 
-
-
-
-
-[Authorize] //new line
+    [Authorize] 
     [HttpPost]
     public ActionResult AddTreat(Flavor flavor, int TreatId)
     {
@@ -121,15 +99,13 @@ namespace Bakery.Controllers
       return RedirectToAction("Index");
     }
 
-
-
-[Authorize] //new line
+    [Authorize] 
     public ActionResult Delete(int id)
     {
       var thisFlavor = _db.Flavors.FirstOrDefault(flavors => flavors.FlavorId == id);
       return View(thisFlavor);
     }
-[Authorize] //new line
+    [Authorize] 
     [HttpPost, ActionName("Delete")]
     public ActionResult DeleteConfirmed(int id)
     {
@@ -138,7 +114,7 @@ namespace Bakery.Controllers
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
-[Authorize] //new line
+    [Authorize] 
     [HttpPost]
     public ActionResult DeleteTreat(int joinId)
     {
@@ -149,3 +125,4 @@ namespace Bakery.Controllers
     }
   }
 }
+
